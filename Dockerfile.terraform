@@ -9,6 +9,8 @@ COPY scripts/install-terraform.sh /tmp/install-terraform.sh
 RUN chmod +x /tmp/install-terraform.sh
 RUN /tmp/install-terraform.sh && rm -f /tmp/install-terraform.sh
 
+RUN ${VENV}/bin/pip install oci-cli
+
 # Working directory
 WORKDIR /workspace
 # Expose JupyterLab port
