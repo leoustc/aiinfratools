@@ -1,0 +1,12 @@
+FROM leoustc/aiinfra-tools:mini
+
+ENV VENV=/opt/oci
+RUN ${VENV}/bin/pip install --upgrade pip
+RUN ${VENV}/bin/pip install oci-cli
+RUN ln -s ${VENV}/bin/oci /usr/local/bin/oci
+
+WORKDIR /workspace
+# Expose JupyterLab port
+EXPOSE ${JUPYTER_PORT}
+# Entrypoint: Open shell
+CMD ["/opt/oci/bin/jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--LabApp.token=''", "--LabApp.password=''"]

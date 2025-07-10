@@ -1,0 +1,17 @@
+FROM leoustc/aiinfra-tools:mini
+
+ENV SHELL=/bin/bash
+ENV VENV=/opt/oci
+RUN ${VENV}/bin/pip install --upgrade pip
+
+# Install OCI Terraform provider
+COPY scripts/install-terraform.sh /tmp/install-terraform.sh
+RUN chmod +x /tmp/install-terraform.sh
+RUN /tmp/install-terraform.sh && rm -f /tmp/install-terraform.sh
+
+# Working directory
+WORKDIR /workspace
+# Expose JupyterLab port
+EXPOSE ${JUPYTER_PORT}
+# Entrypoint: Open shell
+CMD ["/opt/oci/bin/jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--LabApp.token=''", "--LabApp.password=''"]

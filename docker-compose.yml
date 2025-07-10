@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  oci-tools:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: leoustc/oci-ai-infra-tool:mini
+    container_name: oci-mini
+    volumes:
+      - .:/workspace/scripts
+      - ~/.oci:/root/.oci
+    working_dir: /workspace
+    ports:
+      - "8877:8888"
