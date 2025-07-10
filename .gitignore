@@ -1,0 +1,57 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+crash.log
+*.tfvars
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+terraform.tfvars.json
+terraform.tfvars
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+pip-wheel-metadata/
+*.pyo
+*.pyd
+*.env
+.env/
+.venv/
+venv/
+ENV/
+env/
+.mypy_cache/
+.pytest_cache/
+.pyre/
+.coverage
+coverage.xml
+*.sqlite3
+
+# C/C++
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.so
+*.dll
+*.dylib
+*.log
+*.gcno
+*.gcda
+*.gch
+
+# Miscellaneous
+*.env
+.env.*
+*.DS_Store
+*.swp
