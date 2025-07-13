@@ -22,15 +22,15 @@ jobs:
           repository: leoustc/aiinfra-tools     # Change to your repo (e.g., leoustc/k8s etc as needed)
           readme-filepath: ./README.md
 
-      - name: Build base image
+      - name: Build mini image
         run: |
           docker build -t docker.io/leoustc/aiinfra-tools:mini -f Dockerfile.mini .
 
-      - name: Push base image
+      - name: Push mini image
         run: |
           docker push docker.io/leoustc/aiinfra-tools:mini
 
-      - name: Build k8s image
+      - name: Build oci image
         run: |
           docker build -t docker.io/leoustc/aiinfra-tools:oci -f Dockerfile.oci .
 
@@ -44,4 +44,4 @@ jobs:
 
       - name: Push terraform image
         run: |
-          docker build -t docker.io/leoustc/aiinfra-tools:terraform
+          docker push -t docker.io/leoustc/aiinfra-tools:terraform
