@@ -1,56 +1,123 @@
-# aiinfratools
-AI Infra Tools to Management Infrastructure
+# AIInfra Tools
 
-This repository contains GitHub Actions workflows to build and push multiple Docker images for AI infrastructure tools to DockerHub using a matrix strategy.
+A collection of modular Docker images for AI infrastructure automation and management, supporting Oracle Cloud (OCI) and Terraform workflows.
+
+---
 
 ## Overview
 
-- **Automated CI/CD**: On every push to the `main` branch or manual trigger, the workflow builds and pushes Docker images for different tools.
-- **Matrix Build**: Supports building multiple Dockerfiles (e.g., `mini`, `oci`, `terraform`) in parallel.
-- **DockerHub Integration**: Images are tagged and published to your DockerHub account.
+This repository provides several Docker images to streamline AI infrastructure tasks, including a minimal JupyterLab environment, Oracle Cloud CLI, and Terraform automation. Images are published to DockerHub as:
 
-## Workflow Details
+- `leoustc/aiinfra-tools:mini`
+- `leoustc/aiinfra-tools:oci`
+- `leoustc/aiinfra-tools:terraform`
 
-- **Workflow File**: `.github/workflows/dockerhub-matrix.yml`
-- **Triggers**: 
-  - Pushes to `main`
-  - Manual dispatch via GitHub Actions UI
-- **Dockerfiles Supported**:
-  - `Dockerfile.mini` → `:mini` tag
-  - `Dockerfile.oci` → `:oci` tag
-  - `Dockerfile.terraform` → `:terraform` tag
+## Available Images
 
-## How It Works
+| Dockerfile              | DockerHub Tag                     | Description                                              |
+|-------------------------|-----------------------------------|----------------------------------------------------------|
+| `Dockerfile.mini`       | `leoustc/aiinfra-tools:mini`      | Minimal JupyterLab image with terminal, no notebook execution.  |
+| `Dockerfile.oci`        | `leoustc/aiinfra-tools:oci`       | Adds Oracle Cloud CLI tools to the base image.            |
+| `Dockerfile.terraform`  | `leoustc/aiinfra-tools:terraform` | Adds Terraform and OCI Terraform provider on top of OCI.  |
 
-1. **Checkout Source**: Clones the repository.
-2. **Set up Docker Buildx**: Enables advanced Docker build features.
-3. **Login to DockerHub**: Uses GitHub secrets for authentication.
-4. **Extract Metadata**: Sets image tags and labels.
-5. **Build and Push**: Builds each Dockerfile and pushes the image to DockerHub.
+---
 
-## DockerHub Image Tags
+## Usage
 
-Images are pushed to:
+### Pulling Images
 
+```sh
+docker pull leoustc/aiinfra-tools:<tag>
 ```
-docker.io/<your-dockerhub-username>/aiinfra-tools:<tag>
+Replace `<tag>` with `mini`, `oci`, or `terraform`.
+
+---
+
+### Mini JupyterLab Image (`mini` tag)
+
+The `mini` image provides a lightweight JupyterLab environment with only the file browser and terminal enabled. Notebook execution is disabled for security and minimalism.
+
+#### Run JupyterLab
+
+```sh
+docker run -it --rm -p 8888:8888 leoustc/aiinfra-tools:mini
 ```
 
-Where `<tag>` is one of: `mini`, `oci`, `terraform`.
+- Access JupyterLab at: [http://localhost:8888](http://localhost:8888)
+- No token or password is required.
+- Only the file browser and terminal are available; notebook execution is disabled.
 
-## Requirements
+#### Volumes
 
-- Set the following GitHub repository secrets:
-  - `DOCKERHUB_USERNAME`
-  - `DOCKERHUB_TOKEN`
+To persist files or access local directories, mount them as volumes:
 
-## Example Usage
+```sh
+docker run -it --rm -p 8888:8888 -v $(pwd):/workspace leoustc/aiinfra-tools:mini
+```
 
-To trigger the workflow, push to the `main` branch or use the "Run workflow" button in the Actions tab.
+---
+
+### Using with Docker Compose
+
+Example `docker-compose.yml` for running the OCI or Terraform containers and sharing your local OCI credentials:
+
+```yaml
+version: '3.8'
+
+services:
+  oci:
+    image: leoustc/aiinfra-tools:oci
+    container_name: oci-tools
+    volumes:
+      - ~/.oci:/root/.oci      # Share your OCI credentials
+      - .:/workspace          # Share your project directory
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+
+  terraform:
+    image: leoustc/aiinfra-tools:terraform
+    container_name: terraform-tools
+    volumes:
+      - ~/.oci:/root/.oci      # Share your OCI credentials
+      - .:/workspace          # Share your Terraform configs
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+```
+
+**Notes:**
+- Ensure your OCI config and API key are present in `~/.oci` on your host.
+- Your current directory (`.`) is mounted as `/workspace` in the container.
+- Adjust services and volumes as needed for your setup.
+
+#### Start a shell in the container
+
+```sh
+docker compose run --rm oci
+# or
+docker compose run --rm terraform
+```
+
+---
+
+## CI/CD
+
+- Images are built and pushed to DockerHub via GitHub Actions on every push to `main` or on release.
+- Build order: `mini` → `oci` → `terraform`.
+
+---
 
 ## Customization
 
-- To add more Dockerfiles, update the `matrix.include` section in `.github/workflows/dockerhub-matrix.yml`.
-- To change image names or tags, edit the `IMAGE_NAME` and `tag` fields.
+To add a new image:
+1. Create a new Dockerfile (e.g., `Dockerfile.mynew`).
+2. Add corresponding build and push steps in your CI workflow.
+3. Tag and document the new image in this README.
 
-##
+---
+
+## License
+
+This project is licensed under the GNU General Public License v2.0 (GPLv2).  
+See [LICENSE](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)

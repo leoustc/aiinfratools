@@ -44,4 +44,4 @@ jobs:
 
       - name: Push terraform image
         run: |
-          docker push -t docker.io/leoustc/aiinfra-tools:terraform
+          docker push docker.io/leoustc/aiinfra-tools:terraform
