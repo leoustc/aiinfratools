@@ -22,6 +22,13 @@ jobs:
           repository: leoustc/aiinfra-tools     # Change to your repo (e.g., leoustc/k8s etc as needed)
           readme-filepath: ./README.md
 
+      - name: Fetch Cache
+        run: |
+          docker pull docker.io/leoustc/aiinfra-tools:mini || true
+          docker pull docker.io/leoustc/aiinfra-tools:oci || true
+          docker pull docker.io/leoustc/aiinfra-tools:terraform || true
+          docker pull docker.io/leoustc/aiinfra-tools:k8s || true
+
       - name: Build mini image
         run: |
           docker build -t docker.io/leoustc/aiinfra-tools:mini -f Dockerfile.mini .
