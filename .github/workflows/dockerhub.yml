@@ -45,3 +45,7 @@ jobs:
       - name: Push terraform image
         run: |
           docker push docker.io/leoustc/aiinfra-tools:terraform
+
+      - name: Build k8s image and Push the image
+        run: |
+          docker build -t docker.io/leoustc/aiinfra-tools:k8s -f Dockerfile.k8s . && docker push docker.io/leoustc/aiinfra-tools:k8s

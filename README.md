@@ -1,4 +1,4 @@
-# AIInfra Tools
+# AI Infra Tools - Admin
 
 A collection of modular Docker images for AI infrastructure automation and management, supporting Oracle Cloud (OCI) and Terraform workflows.
 
